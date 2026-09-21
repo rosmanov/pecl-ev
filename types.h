@@ -36,7 +36,7 @@ typedef struct _php_ev_object {
 } php_ev_object;
 
 static zend_always_inline php_ev_object * php_ev_object_fetch_object(zend_object *obj) {
-      return (EXPECTED(obj) ? (php_ev_object *)((char *)obj - XtOffsetOf(php_ev_object, zo)) : NULL);
+      return (EXPECTED(obj) ? (php_ev_object *)((char *)obj - offsetof(php_ev_object, zo)) : NULL);
 }
 
 #define Z_EV_OBJECT_P(zv) (EXPECTED(zv) ? php_ev_object_fetch_object(Z_OBJ_P(zv)) : NULL)

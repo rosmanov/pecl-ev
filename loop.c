@@ -62,7 +62,7 @@ static void php_ev_loop_object_ctor(INTERNAL_FUNCTION_PARAMETERS, const zend_boo
 
 		if (is_default_loop && !zdefault_loop_ptr) {
 			if (!Z_ISUNDEF(MyG(default_loop))) {
-				zval_dtor(&MyG(default_loop));
+				zval_ptr_dtor_nogc(&MyG(default_loop));
 			}
 			ZVAL_ZVAL(&MyG(default_loop), return_value, 1, 0);
 		}

@@ -34,7 +34,7 @@ static zend_always_inline void php_ev_prop_write_zval(zval *pz, zval *value)
 #if 0
 	ZVAL_ZVAL(pz, value, 1, 0);
 #else
-	zval_dtor(pz);
+	zval_ptr_dtor_nogc(pz);
 #if 0
 	ZVAL_COPY(pz, value);
 #endif

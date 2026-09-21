@@ -1040,7 +1040,7 @@ PHP_MINIT_FUNCTION(ev)
 	const zend_object_handlers *std_hnd = zend_get_std_object_handlers();
 
 	memcpy(&ev_object_handlers, std_hnd, sizeof(zend_object_handlers));
-	ev_object_handlers.offset               = XtOffsetOf(php_ev_object, zo);
+	ev_object_handlers.offset               = offsetof(php_ev_object, zo);
 	ev_object_handlers.free_obj             = php_ev_object_free_storage;
 	ev_object_handlers.clone_obj            = NULL;
 	ev_object_handlers.dtor_obj             = php_ev_watcher_object_dtor;

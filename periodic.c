@@ -50,13 +50,11 @@ static ev_tstamp php_ev_periodic_rescheduler(ev_periodic *w, ev_tstamp now)
 				ZSTR_VAL(pf->func_ptr->common.function_name),
 				ZSTR_LEN(pf->func_ptr->common.function_name),
 				&retval, 2, self, &znow);
-		zend_exception_save();
 		tstamp = (ev_tstamp)Z_DVAL(retval);
 		if (tstamp < now) {
 			tstamp = now;
 		}
 		zval_ptr_dtor(&retval);
-		zend_exception_restore();
 
 	} else {
 		tstamp = now;
