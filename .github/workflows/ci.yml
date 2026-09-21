@@ -13,6 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         php:
+          # 8.6 has no final release yet, this tag follows its latest pre-release
+          - "8.6-rc"
           - "8.5.2"
           - "8.3.10"
 
