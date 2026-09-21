@@ -16,10 +16,10 @@
     <email>osmanov@php.net</email>
     <active>yes</active>
   </lead>
-  <date>2026-01-27</date>
+  <date>2026-09-21</date>
   <!-- Current version -->
   <version>
-    <release>1.2.3</release>
+    <release>1.2.4</release>
     <api>0.4.3</api>
   </version>
   <stability>
@@ -28,7 +28,7 @@
   </stability>
   <license uri="http://www.php.net/license">PHP</license>
   <notes><![CDATA[
-    Fix #54: non-debug compilation failed with PHP 8.5.2+
+    Fix PHP 8.6 build (by nicolas-grekas @ github.com)
 ]]></notes>
   <!-- Contents -->
   <contents>
@@ -127,6 +127,22 @@
   </extsrcrelease>
   <!-- changelog-->
   <changelog>
+    <!--{{{ 1.2.4 -->
+    <release>
+      <version>
+        <release>1.2.4</release>
+        <api>0.4.3</api>
+      </version>
+      <stability>
+        <release>stable</release>
+        <api>stable</api>
+      </stability>
+      <license uri="http://www.php.net/license">PHP</license>
+      <notes><![CDATA[
+        Fix PHP 8.6 build (by nicolas-grekas @ github.com)
+        ]]></notes>
+    </release>
+    <!--}}}-->
     <!-- {{{ 1.2.3 -->
     <release>
       <version>
