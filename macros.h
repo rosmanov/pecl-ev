@@ -19,6 +19,8 @@
 #ifndef PHP_EV_MACROS_H
 #define PHP_EV_MACROS_H
 
+#include <signal.h>
+
 #ifndef TRUE
 # define TRUE 1
 #endif
@@ -140,9 +142,18 @@
 } while (0)
 
 #define PHP_EV_SIGNUM_ERROR_STR "Invalid signal value"
-#define PHP_EV_IS_SIGNUM_VALID(x) ((x) >= 0)
+/* libev indexes its signal array with signum - 1, up to EV_NSIG, which it deduces from NSIG or _NSIG on the
+ * platforms that define them; elsewhere, accept fewer signals than it may. */
+#if defined(NSIG)
+# define PHP_EV_NSIG (NSIG)
+#elif defined(_NSIG)
+# define PHP_EV_NSIG (_NSIG)
+#else
+# define PHP_EV_NSIG 32
+#endif
+#define PHP_EV_IS_SIGNUM_VALID(x) ((x) > 0 && (x) < PHP_EV_NSIG)
 #define PHP_EV_CHECK_SIGNUM(num) do {                             \
-	if (PHP_EV_IS_SIGNUM_VALID(num)) {                            \
+	if (!PHP_EV_IS_SIGNUM_VALID(num)) {                           \
 		php_error_docref(NULL, E_ERROR, PHP_EV_SIGNUM_ERROR_STR); \
 		return;                                                   \
 	}                                                             \

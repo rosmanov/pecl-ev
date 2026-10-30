@@ -1280,6 +1280,8 @@ PHP_METHOD(Ev, feedSignal)
 	zend_long signum;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &signum) != FAILURE) {
+		/* libev indexes its signal array with it, unchecked */
+		PHP_EV_CHECK_SIGNUM(signum);
 		ev_feed_signal(signum);
 	}
 }
@@ -1302,6 +1304,7 @@ PHP_METHOD(Ev, feedSignalEvent)
 	EV_P = PHP_EV_LOOP_FETCH_FROM_OBJECT(ev_obj);
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &signum) != FAILURE) {
+		PHP_EV_CHECK_SIGNUM(signum);
 		ev_feed_signal_event(EV_A_ signum);
 	}
 }
