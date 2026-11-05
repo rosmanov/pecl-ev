@@ -6,7 +6,7 @@ on:
 
 jobs:
   test:
-    name: PHP ${{ matrix.php }}
+    name: PHP ${{ matrix.php }} (${{ matrix.sanitizer }})
     runs-on: ubuntu-latest
 
     strategy:
@@ -17,6 +17,11 @@ jobs:
           - "8.6-rc"
           - "8.5.2"
           - "8.3.10"
+        sanitizer:
+          - none
+        include:
+          - php: "8.5.2" # latest stable version for ASAN builds
+            sanitizer: asan
 
     container:
       image: php:${{ matrix.php }}-cli
@@ -25,25 +30,21 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Build and run tests
+        env:
+          SANITIZER: ${{ matrix.sanitizer }}
         shell: bash
         run: |
-          docker-php-ext-install sockets
+          ./ci/setup-php-docker.sh
 
           sockets_ini=$(php -i | grep -m 1 -o -E '/.*sockets\.ini' || true)
           test -z "$sockets_ini" || \
             mv -v "$sockets_ini" "$(echo "$sockets_ini" | sed -e 's/sockets.ini/0-sockets.ini/')"
 
           docker-php-source extract
-
-          phpize
-          ./configure --enable-ev
-          make install
-
+          ./ci/build.sh
           echo 'extension=ev.so' > /usr/local/etc/php/conf.d/z-ev.ini
 
-          NO_INTERACTION=1 \
-            TEST_PHP_EXECUTABLE="$(which php)" \
-            php run-tests.php
+          ./ci/test.sh
 
           docker-php-source delete
 

@@ -23,4 +23,13 @@ if ! php -m | grep -q posix; then
     fi
 fi
 
-php -n $sockets_option $posix_option -dextension=ev.so  -dextension_dir="${local_libs_dir}" "$@"
+if [ "${SANITIZER:-none}" = "asan" ]; then
+    libasan="$(gcc -print-file-name=libasan.so)"
+
+    exec env \
+        LD_PRELOAD="$libasan" \
+        ASAN_OPTIONS="${ASAN_OPTIONS:-detect_leaks=0:abort_on_error=1}" \
+        php -n $sockets_option $posix_option -dextension=ev.so -dextension_dir="${local_libs_dir}" "$@"
+else
+    exec php -n $sockets_option $posix_option -dextension=ev.so -dextension_dir="${local_libs_dir}" "$@"
+fi

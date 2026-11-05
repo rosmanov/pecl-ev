@@ -1,9 +1,15 @@
-version: '3'
-
 services:
-    php8test:
-        stdin_open: true
-        image: ruslanosmanov/pecl-ev-php8-test
-        build:
-            context: .
-            dockerfile: Dockerfile
+  php8test:
+    stdin_open: true
+    image: ruslanosmanov/pecl-ev-php8-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+  php8asantest:
+    stdin_open: true
+    image: ruslanosmanov/pecl-ev-php8-asan-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SANITIZER: asan
