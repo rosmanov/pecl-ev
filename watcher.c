@@ -422,9 +422,10 @@ PHP_METHOD(EvWatcher, getLoop)
 PHP_METHOD(EvWatcher, keepalive)
 {
 	ev_watcher *w;
-	zend_bool n_value = TRUE;
+	zend_bool keepalive = TRUE;
+	int       n_value;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|b", &n_value) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|b", &keepalive) == FAILURE) {
 		return;
 	}
 
@@ -432,7 +433,7 @@ PHP_METHOD(EvWatcher, keepalive)
 
 	/* Returning previous state */
 	RETVAL_BOOL((php_ev_watcher_flags(w) & PHP_EV_WATCHER_FLAG_KEEP_ALIVE));
-	n_value = n_value != FALSE ? PHP_EV_WATCHER_FLAG_KEEP_ALIVE : 0;
+	n_value = keepalive ? PHP_EV_WATCHER_FLAG_KEEP_ALIVE : 0;
 
 	/* Update watcher flags, if keepalive flag changed */
 	if ((n_value ^ php_ev_watcher_flags(w)) & PHP_EV_WATCHER_FLAG_KEEP_ALIVE) {
