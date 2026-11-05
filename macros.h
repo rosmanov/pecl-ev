@@ -140,9 +140,9 @@
 } while (0)
 
 #define PHP_EV_SIGNUM_ERROR_STR "Invalid signal value"
-#define PHP_EV_IS_SIGNUM_VALID(x) ((x) >= 0)
+#define PHP_EV_IS_SIGNUM_VALID(x) ((x) > 0 && (x) < EV_NSIG)
 #define PHP_EV_CHECK_SIGNUM(num) do {                             \
-	if (PHP_EV_IS_SIGNUM_VALID(num)) {                            \
+	if (!PHP_EV_IS_SIGNUM_VALID(num)) {                           \
 		php_error_docref(NULL, E_ERROR, PHP_EV_SIGNUM_ERROR_STR); \
 		return;                                                   \
 	}                                                             \
