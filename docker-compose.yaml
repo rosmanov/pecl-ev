@@ -13,3 +13,4 @@ services:
       dockerfile: Dockerfile
       args:
         SANITIZER: asan
+        PHP_VERSION: "8.5"

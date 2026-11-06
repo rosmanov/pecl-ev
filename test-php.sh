@@ -5,23 +5,16 @@
 dir=$(cd $(dirname "$0"); pwd)
 local_libs_dir="${dir}/.libs"
 
-sockets_option=''
-if ! php -m | grep -q sockets; then
-    sockets_so_path="$(php-config --extension-dir)/sockets.so"
-    if test -e "$sockets_so_path"; then
-        cp "$sockets_so_path" "$local_libs_dir"
-        sockets_option='-dextension=sockets.so'
+# `php -n` ignores the ini files, so load the optional extensions explicitly (sockets goes first).
+ext_options=''
+for ext in pcntl posix sockets; do
+    ext_so_path="$(php-config --extension-dir)/${ext}.so"
+    # Skip the extensions compiled into PHP
+    if ! php -n -m | grep -qx "$ext" && [ -f "$ext_so_path" ]; then
+        cp "$ext_so_path" "$local_libs_dir"
+        ext_options="-dextension=${ext}.so ${ext_options}"
     fi
-fi
-
-posix_option=''
-if ! php -m | grep -q posix; then
-    posix_so_path="$(php-config --extension-dir)/posix.so"
-    if test -e "$posix_so_path"; then
-        cp "$posix_so_path" "$local_libs_dir"
-        posix_option='-dextension=posix.so'
-    fi
-fi
+done
 
 if [ "${SANITIZER:-none}" = "asan" ]; then
     libasan="$(gcc -print-file-name=libasan.so)"
@@ -29,7 +22,7 @@ if [ "${SANITIZER:-none}" = "asan" ]; then
     exec env \
         LD_PRELOAD="$libasan" \
         ASAN_OPTIONS="${ASAN_OPTIONS:-detect_leaks=0:abort_on_error=1}" \
-        php -n $sockets_option $posix_option -dextension=ev.so -dextension_dir="${local_libs_dir}" "$@"
+        php -n $ext_options -dextension=ev.so -dextension_dir="${local_libs_dir}" "$@"
 else
-    exec php -n $sockets_option $posix_option -dextension=ev.so -dextension_dir="${local_libs_dir}" "$@"
+    exec php -n $ext_options -dextension=ev.so -dextension_dir="${local_libs_dir}" "$@"
 fi
