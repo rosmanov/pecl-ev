@@ -535,7 +535,7 @@ static void php_ev_embed_object_dtor(zend_object *object)/*{{{*/
 	if (EXPECTED(intern->ptr)) {
 		php_ev_embed *embed_ptr = (php_ev_embed *)intern->ptr;
 
-		if (Z_ISUNDEF(embed_ptr->other)) {
+		if (!Z_ISUNDEF(embed_ptr->other)) {
 			zval_ptr_dtor(&embed_ptr->other);
 			ZVAL_UNDEF(&embed_ptr->other);
 		}
@@ -734,7 +734,7 @@ static void php_ev_embed_free_storage(zend_object *object)
 	if (EXPECTED(obj_ptr->ptr)) {
 		php_ev_embed *embed_ptr = (php_ev_embed *)obj_ptr->ptr;
 
-		if (Z_ISUNDEF(embed_ptr->other)) {
+		if (!Z_ISUNDEF(embed_ptr->other)) {
 			zval_ptr_dtor(&embed_ptr->other);
 			ZVAL_UNDEF(&embed_ptr->other);
 		}
