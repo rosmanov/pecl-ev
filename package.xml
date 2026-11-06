@@ -91,6 +91,7 @@
         <file role="src" name="16_generator_cb.phpt" />
         <file role="src" name="17_exit_in_watcher.phpt" />
         <file role="src" name="18_fiber_in_loop_watcher_destroyed.phpt" />
+        <file role="src" name="19_ev_check_create_stopped.phpt" />
       </dir>
       <dir name="libev">
         <file role="doc" name="LICENSE" />

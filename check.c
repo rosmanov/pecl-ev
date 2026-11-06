@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 8                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2024 The PHP Group                                |
+   | Copyright (c) 1997-2026 The PHP Group                                |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -32,13 +32,15 @@ void php_ev_check_object_ctor(INTERNAL_FUNCTION_PARAMETERS, zval *loop, zend_boo
 		return;
 	}
 
-	/* If loop is NULL, then we're in __construct() */
-	if (loop) {
+	if (ctor) {
+		self = getThis();
+	} else {
 		object_init_ex(return_value, ev_check_class_entry_ptr);
 		self = return_value;
-	} else {
+	}
+
+	if (!loop) {
 		loop = php_ev_default_loop();
-		self = getThis();
 	}
 
 	o_self = Z_EV_OBJECT_P(self);
