@@ -359,6 +359,10 @@ PHP_METHOD(EvWatcher, clear)
 
 	w = PHP_EV_WATCHER_FETCH_FROM_OBJECT(Z_EV_OBJECT_P(getThis()));
 
+	if (UNEXPECTED(php_ev_watcher_loop_ptr(w) == NULL)) {
+		RETURN_LONG(0);
+	}
+
 	RETURN_LONG((long)ev_clear_pending(php_ev_watcher_loop_ptr(w), w));
 }
 /* }}} */
@@ -374,6 +378,10 @@ PHP_METHOD(EvWatcher, invoke)
 	}
 
 	w = PHP_EV_WATCHER_FETCH_FROM_OBJECT(Z_EV_OBJECT_P(getThis()));
+
+	if (UNEXPECTED(php_ev_watcher_loop_ptr(w) == NULL)) {
+		return;
+	}
 
 	ev_invoke(php_ev_watcher_loop_ptr(w), w, (int)revents);
 }
@@ -392,6 +400,10 @@ PHP_METHOD(EvWatcher, feed)
 
 	w = PHP_EV_WATCHER_FETCH_FROM_OBJECT(Z_EV_OBJECT_P(getThis()));
 
+	if (UNEXPECTED(php_ev_watcher_loop_ptr(w) == NULL)) {
+		return;
+	}
+
 	ev_feed_event(php_ev_watcher_loop_ptr(w), w, (int)revents);
 }
 /* }}} */
@@ -409,11 +421,15 @@ PHP_METHOD(EvWatcher, getLoop)
 	w      = PHP_EV_WATCHER_FETCH_FROM_OBJECT(Z_EV_OBJECT_P(getThis()));
 	o_loop = php_ev_watcher_loop(w);
 
+	if (UNEXPECTED(o_loop == NULL || o_loop->loop == NULL)) {
+		RETURN_NULL();
+	}
+
 	zval *zloop = (zval *)ev_userdata(o_loop->loop);
 
-    if (!zloop) {
-    	RETURN_NULL();
-    }
+	if (!zloop) {
+		RETURN_NULL();
+	}
 	RETVAL_ZVAL(zloop, 1, 0);
 }
 /* }}} */

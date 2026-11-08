@@ -107,6 +107,10 @@ PHP_METHOD(EvTimer, again)
 
 	PHP_EV_CHECK_REPEAT(w->repeat);
 
+	if (UNEXPECTED(php_ev_watcher_loop_ptr((ev_watcher *)w) == NULL)) {
+		return;
+	}
+
 	ev_timer_again(php_ev_watcher_loop_ptr((ev_watcher *)w), w);
 	PHP_EV_WATCHER_UNREF(w);
 }

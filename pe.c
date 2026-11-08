@@ -365,6 +365,10 @@ static zval * ev_timer_prop_remaining_read(php_ev_object *obj, zval *retval)
 	PHP_EV_PROP_REQUIRE(obj->ptr);
 
 	ev_timer *timer_watcher = (ev_timer *)PHP_EV_WATCHER_FETCH_FROM_OBJECT(obj);
+	if (UNEXPECTED(php_ev_watcher_loop_ptr((ev_watcher *)timer_watcher) == NULL)) {
+		ZVAL_DOUBLE(retval, 0.0);
+		return retval;
+	}
 	ZVAL_DOUBLE(retval, ev_timer_remaining(
 				php_ev_watcher_loop_ptr((ev_watcher *)timer_watcher), timer_watcher));
 	return retval;

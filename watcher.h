@@ -47,6 +47,7 @@ static zend_always_inline ev_loop * php_ev_watcher_loop_ptr(const ev_watcher *w)
 #define PHP_EV_WATCHER_UNREF(w) do {                                            \
 	if (!(php_ev_watcher_flags(w) &                                             \
 				(PHP_EV_WATCHER_FLAG_KEEP_ALIVE | PHP_EV_WATCHER_FLAG_UNREFED)) \
+				&& php_ev_watcher_loop_ptr((ev_watcher *)(w))                   \
 	   ) {                                                                      \
 		ev_unref(php_ev_watcher_loop(w)->loop);                                 \
 		php_ev_watcher_flags(w) |= PHP_EV_WATCHER_FLAG_UNREFED;                 \
@@ -56,7 +57,9 @@ static zend_always_inline ev_loop * php_ev_watcher_loop_ptr(const ev_watcher *w)
 #define PHP_EV_WATCHER_REF(w) do {                               \
 	if (php_ev_watcher_flags(w) & PHP_EV_WATCHER_FLAG_UNREFED) { \
 		php_ev_watcher_flags(w) &= ~PHP_EV_WATCHER_FLAG_UNREFED; \
-		ev_ref(php_ev_watcher_loop(w)->loop);                    \
+		if (php_ev_watcher_loop_ptr((ev_watcher *)(w))) {        \
+			ev_ref(php_ev_watcher_loop(w)->loop);                \
+		}                                                        \
 	}                                                            \
 } while (0)
 

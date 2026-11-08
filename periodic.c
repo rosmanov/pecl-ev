@@ -205,6 +205,9 @@ PHP_METHOD(EvPeriodic, again)
 
 	if (zend_parse_parameters_none() != FAILURE) {
 		w = (ev_periodic *)PHP_EV_WATCHER_FETCH_FROM_THIS();
+		if (UNEXPECTED(php_ev_watcher_loop_ptr((ev_watcher *)w) == NULL)) {
+			return;
+		}
 		ev_periodic_again(php_ev_watcher_loop_ptr((ev_watcher *)w), w);
 		PHP_EV_WATCHER_UNREF(w);
 	}
