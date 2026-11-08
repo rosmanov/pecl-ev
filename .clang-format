@@ -1,9 +1,23 @@
 BasedOnStyle: LLVM
+
+# Indentation
 IndentWidth: 4
-UseTab: Never
-ColumnLimit: 0 # don't rewrap existing code
+TabWidth: 4
+UseTab: ForIndentation
+
+# Alignment
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: false
+
+# Formatting
+ColumnLimit: 0 # Don't rewrap existing code
 BreakBeforeBraces: Linux
-IndentPPDirectives: AfterHash
-PPIndentWidth: 2 # gives `#  include`
+
+# Preprocessor
+IndentPPDirectives: None
+
+# Includes
 SortIncludes:
   Enabled: false

@@ -14,6 +14,7 @@ run-tests.php
 tags
 
 /.ccls-cache/
+/compile_commands.json
 
 *.tgz
 *.in
