@@ -72,6 +72,8 @@ void php_ev_embed_object_ctor(INTERNAL_FUNCTION_PARAMETERS, zval *zloop, zend_bo
 		return;
 	}
 	ev_embed_set(w, PHP_EV_LOOP_FETCH_FROM_OBJECT(o_loop_other));
+	/* The embedded loop must outlive the watcher */
+	ZVAL_COPY(&embed_ptr->other, loop_other);
 
 	o_self = Z_EV_OBJECT_P(self);
 	o_self->ptr = (void *)embed_ptr;
@@ -104,8 +106,9 @@ PHP_METHOD(EvEmbed, set)
 	ev_embed      *w;
 	php_ev_object *o_loop_other;
 	ev_loop       *loop_other_ptr;
+	php_ev_embed  *embed_ptr;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "O", &loop_other) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "O", &loop_other, ev_loop_class_entry_ptr) == FAILURE) {
 		return;
 	}
 
@@ -118,10 +121,15 @@ PHP_METHOD(EvEmbed, set)
 		return;
 	}
 
-	w  = (ev_embed *)PHP_EV_WATCHER_FETCH_FROM_THIS();
+	w = (ev_embed *)PHP_EV_WATCHER_FETCH_FROM_THIS();
 
 	PHP_EV_ASSERT(PHP_EV_LOOP_FETCH_FROM_OBJECT(o_loop_other));
 	PHP_EV_WATCHER_RESET(ev_embed, w, (w, PHP_EV_LOOP_FETCH_FROM_OBJECT(o_loop_other)));
+
+	/* Keep the new loop alive, release the previous one */
+	embed_ptr = (php_ev_embed *)w;
+	zval_ptr_dtor(&embed_ptr->other);
+	ZVAL_COPY(&embed_ptr->other, loop_other);
 }
 /* }}} */
 
@@ -129,10 +137,14 @@ PHP_METHOD(EvEmbed, set)
 PHP_METHOD(EvEmbed, sweep)
 {
 	ev_embed *w;
+	ev_loop  *loop;
 
 	if (zend_parse_parameters_none() != FAILURE) {
-		w = (ev_embed *) PHP_EV_WATCHER_FETCH_FROM_THIS();
-		ev_embed_sweep(php_ev_watcher_loop_ptr((ev_watcher *)w), w);
+		w = (ev_embed *)PHP_EV_WATCHER_FETCH_FROM_THIS();
+		loop = php_ev_watcher_loop_ptr((ev_watcher *)w);
+		if (loop) {
+			ev_embed_sweep(loop, w);
+		}
 	}
 
 }
