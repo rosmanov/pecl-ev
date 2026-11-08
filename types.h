@@ -19,6 +19,8 @@
 #ifndef PHP_EV_TYPES_H
 #define PHP_EV_TYPES_H
 
+#include "php.h"
+
 struct ev_watcher;
 
 typedef struct _php_ev_func_info {
