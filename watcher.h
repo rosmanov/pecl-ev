@@ -120,14 +120,21 @@ static zend_always_inline ev_loop * php_ev_watcher_loop_ptr(const ev_watcher *w)
 #define PHP_EV_WATCHER_FACTORY_NS(type, zloop)                                             \
     php_ev_ ## type ## _object_ctor(INTERNAL_FUNCTION_PARAM_PASSTHRU, zloop, FALSE, FALSE)
 
-#define php_ev_set_watcher_priority(w, priority) do {          \
-	if (ev_is_pending((w))) {                                  \
-		php_error_docref(NULL, E_WARNING,                      \
-				"Can't set priority: the watcher is pending"); \
-		break;                                                 \
-	}                                                          \
-	ev_set_priority((w), priority);                            \
-} while (0);
+static inline void php_ev_set_watcher_priority(ev_watcher *w, int priority)
+{
+	if (ev_is_pending(w)) {
+		php_error_docref(NULL, E_WARNING, "Can't set priority: the watcher is pending");
+		return;
+	}
+
+	if (priority < EV_MINPRI) {
+		priority = EV_MINPRI;
+	} else if (priority > EV_MAXPRI) {
+		priority = EV_MAXPRI;
+	}
+
+	ev_set_priority(w, priority);
+}
 
 void php_ev_watcher_callback(EV_P_ ev_watcher *watcher, int revents);
 int php_ev_set_watcher(ev_watcher *w, int type, zval *zself, zval *zloop, zval *zcb, zval *data, int priority);
