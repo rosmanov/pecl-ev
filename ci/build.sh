@@ -15,6 +15,8 @@ case "${SANITIZER:-none}" in
         ;;
 esac
 
+# Release build by default; EV_DEBUG=yes enables --enable-ev-debug
+export EV_DEBUG="${EV_DEBUG:-no}"
 ./rebuild.sh
 
 make install

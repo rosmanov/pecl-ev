@@ -8,6 +8,15 @@ services:
       dockerfile: Dockerfile
       args:
         PHP_VERSION: "8.6-rc"
+  php86rcdebugtest:
+    stdin_open: true
+    image: ruslanosmanov/pecl-ev-php86rc-debug-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: "8.6-rc"
+        EV_DEBUG: "yes"
   php85test:
     stdin_open: true
     image: ruslanosmanov/pecl-ev-php85-test

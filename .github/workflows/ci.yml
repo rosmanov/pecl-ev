@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: PHP ${{ matrix.php }} (${{ matrix.sanitizer }})
+    name: PHP ${{ matrix.php }} (${{ matrix.sanitizer }}, ${{ matrix.variant }}, debug=${{ matrix.ev_debug }})
     runs-on: ubuntu-latest
 
     strategy:
@@ -23,16 +23,25 @@ jobs:
           - none
         variant:
           - cli
+        ev_debug:
+          - "no"
         include:
+          - php: "8.6-rc" # latest version for --enable-ev-debug builds
+            sanitizer: none
+            variant: cli
+            ev_debug: "yes"
           - php: "8.5.2" # latest stable version for ASAN builds
             sanitizer: asan
             variant: cli
+            ev_debug: "no"
           - php: "8.5"
             sanitizer: none
             variant: zts
+            ev_debug: "no"
           - php: "8.3" # oldest supported version
             sanitizer: none
             variant: zts
+            ev_debug: "no"
 
     container:
       image: php:${{ matrix.php }}-${{ matrix.variant }}
@@ -43,6 +52,7 @@ jobs:
       - name: Build and run tests
         env:
           SANITIZER: ${{ matrix.sanitizer }}
+          EV_DEBUG: ${{ matrix.ev_debug }}
         shell: bash
         run: |
           ./ci/setup-php-docker.sh

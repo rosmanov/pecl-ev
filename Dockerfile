@@ -5,6 +5,9 @@ FROM php:${PHP_VERSION}-${VARIANT}
 ARG SANITIZER=""
 ENV SANITIZER="${SANITIZER}"
 
+ARG EV_DEBUG="no"
+ENV EV_DEBUG="${EV_DEBUG}"
+
 RUN mkdir -p /usr/src/pecl-ev
 WORKDIR /usr/src/pecl-ev
 

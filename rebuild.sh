@@ -2,7 +2,12 @@
 set -e
 phpize --clean && phpize
 #aclocal && libtoolize --force && autoreconf
-./configure --enable-ev --enable-ev-debug "$@"
+# EV_DEBUG=no builds without --enable-ev-debug (libev assertions compiled out)
+ev_debug_flag=--enable-ev-debug
+if [ "${EV_DEBUG:-yes}" = no ]; then
+    ev_debug_flag=
+fi
+./configure --enable-ev $ev_debug_flag "$@"
 make clean
 
 # Run make via bear locally to rebuild the compile_commands.json file
