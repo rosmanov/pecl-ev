@@ -1,3 +1,8 @@
+## 1.3.1 (2026-11-15)
+
+- Re-release of 1.3.0 (the 1.3.0 tag was withdrawn)
+- Check debug mode in CI
+
 ## 1.3.0 (2026-11-15)
 
 - Fix: EvPrepare and EvFork factories used wrong classes, which led to memory access issues
