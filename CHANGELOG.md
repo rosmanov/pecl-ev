@@ -12,6 +12,8 @@
 - Add signal number validation to Ev::feedSignal() and Ev::feedSignalEvent()
 - Check the upper bound of the valid signal numbers (all methods/functions accepting signal numbers)
 - Add builds with enabled address sanitizer
+- Fix parallel test crash on ZTS PHP 8.6; mirror CI matrix in docker-compose
+- Fix Bitbucket mirroring workflow (it failed pushing existing tags)
 
 ## 1.2.4 (2026-09-21)
 
