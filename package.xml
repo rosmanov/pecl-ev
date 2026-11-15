@@ -1,8 +1,5 @@
-<?xml version="1.0"?>
-<package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0"
-  xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd
-                      http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd                       http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
   <name>ev</name>
   <channel>pecl.php.net</channel>
   <summary>Provides interface to libev library</summary>
@@ -16,10 +13,10 @@
     <email>osmanov@php.net</email>
     <active>yes</active>
   </lead>
-  <date>2026-09-21</date>
+  <date>2026-11-15</date>
   <!-- Current version -->
   <version>
-    <release>1.2.4</release>
+    <release>1.3.0</release>
     <api>0.4.3</api>
   </version>
   <stability>
@@ -27,92 +24,103 @@
     <api>stable</api>
   </stability>
   <license uri="http://www.php.net/license">PHP</license>
-  <notes><![CDATA[
-    Fix PHP 8.6 build (by nicolas-grekas @ github.com)
-]]></notes>
+  <notes>
+      - Fix: EvPrepare and EvFork factories used wrong classes, which led to memory access issues
+      - Fix: watchers read the loop after it was destroyed and reset to NULL
+      - Fix out-of-bounds memory reads due to out-of-range priority
+      - Fix: EvEmbed use-after-free: keep the embedded loop alive
+      - Fix the missing class argument in EvEmbed::set() parameter parsing.
+      - Generate compile_commands.json for IDE
+      - Fix leak in EvEmbed object destructor
+      - Fix segfault in EvCheck::createStopped()
+      - Fix build warnings
+      - Add signal number validation to Ev::feedSignal() and Ev::feedSignalEvent()
+      - Check the upper bound of the valid signal numbers (all methods/functions accepting signal numbers)
+      - Add builds with enabled address sanitizer
+  </notes>
   <!-- Contents -->
   <contents>
     <dir name="/">
-      <file role="doc" name="CREDITS" />
-      <file role="doc" name="INSTALL.md" />
-      <file role="doc" name="LICENSE" />
-      <file role="doc" name="README.md" />
-      <file role="doc" name="TODO.md" />
-      <file role="src" name="config.m4" />
-      <file role="src" name="config.w32" />
-      <file role="src" name="check.c" />
-      <file role="src" name="child.c" />
-      <file role="src" name="common.h" />
-      <file role="src" name="embed.c" />
-      <file role="src" name="embed.h" />
-      <file role="src" name="ev.c" />
-      <file role="src" name="evwrap.c" />
-      <file role="src" name="fork.c" />
-      <file role="src" name="idle.c" />
-      <file role="src" name="io.c" />
-      <file role="src" name="loop.c" />
-      <file role="src" name="macros.h" />
-      <file role="src" name="pe.c" />
-      <file role="src" name="periodic.c" />
-      <file role="src" name="php_ev.h" />
-      <file role="src" name="php_ev.stub.php" />
-      <file role="src" name="php_ev_arginfo.h" />
-      <file role="src" name="prepare.c" />
-      <file role="src" name="priv.h" />
-      <file role="src" name="signal.c" />
-      <file role="src" name="stat.c" />
-      <file role="src" name="timer.c" />
-      <file role="src" name="types.h" />
-      <file role="src" name="util.c" />
-      <file role="src" name="util.h" />
-      <file role="src" name="watcher.c" />
-      <file role="src" name="watcher.h" />
+      <file role="doc" name="CREDITS"/>
+      <file role="doc" name="INSTALL.md"/>
+      <file role="doc" name="LICENSE"/>
+      <file role="doc" name="README.md"/>
+      <file role="doc" name="TODO.md"/>
+      <file role="src" name="config.m4"/>
+      <file role="src" name="config.w32"/>
+      <file role="src" name="check.c"/>
+      <file role="src" name="child.c"/>
+      <file role="src" name="common.h"/>
+      <file role="src" name="embed.c"/>
+      <file role="src" name="embed.h"/>
+      <file role="src" name="ev.c"/>
+      <file role="src" name="evwrap.c"/>
+      <file role="src" name="fork.c"/>
+      <file role="src" name="idle.c"/>
+      <file role="src" name="io.c"/>
+      <file role="src" name="loop.c"/>
+      <file role="src" name="macros.h"/>
+      <file role="src" name="pe.c"/>
+      <file role="src" name="periodic.c"/>
+      <file role="src" name="php_ev.h"/>
+      <file role="src" name="php_ev.stub.php"/>
+      <file role="src" name="php_ev_arginfo.h"/>
+      <file role="src" name="prepare.c"/>
+      <file role="src" name="priv.h"/>
+      <file role="src" name="signal.c"/>
+      <file role="src" name="stat.c"/>
+      <file role="src" name="timer.c"/>
+      <file role="src" name="types.h"/>
+      <file role="src" name="util.c"/>
+      <file role="src" name="util.h"/>
+      <file role="src" name="watcher.c"/>
+      <file role="src" name="watcher.h"/>
       <dir name="tests">
-        <file role="src" name="01_load.phpt" />
-        <file role="src" name="02_ev_construct_variation.phpt" />
-        <file role="src" name="03_ev_loop_props.phpt" />
-        <file role="src" name="04_timer_variation.phpt" />
-        <file role="src" name="05_timer.phpt" />
-        <file role="src" name="06_keepalive.phpt" />
-        <file role="src" name="07_stat.phpt" />
-        <file role="src" name="08_priority.phpt" />
-        <file role="src" name="08_priority_clamp.phpt" />
-        <file role="src" name="09_loop_timer.phpt" />
-        <file role="src" name="10_signal.phpt" />
-        <file role="src" name="11_watcher_data.phpt" />
-        <file role="src" name="12_watcher_leak.phpt" />
-        <file role="src" name="bug24.phpt" />
-        <file role="src" name="bug33.phpt" />
-        <file role="src" name="bug43-uncaught-exception.phpt" />
-        <file role="src" name="bug44-uncaught-exception.phpt" />
-        <file role="src" name="bug64788.phpt" />
-        <file role="src" name="13_watcher_data.phpt" />
-        <file role="src" name="14_get_gc.phpt" />
-        <file role="src" name="15_periodic.phpt" />
-        <file role="src" name="16_generator_cb.phpt" />
-        <file role="src" name="17_exit_in_watcher.phpt" />
-        <file role="src" name="18_fiber_in_loop_watcher_destroyed.phpt" />
-        <file role="src" name="19_ev_check_create_stopped.phpt" />
-        <file role="src" name="20_ev_embed_other_loop_lifetime.phpt" />
-        <file role="src" name="21_ev_watcher_destroyed_loop.phpt" />
-        <file role="src" name="22_ev_prepare_fork_class.phpt" />
+        <file role="src" name="01_load.phpt"/>
+        <file role="src" name="02_ev_construct_variation.phpt"/>
+        <file role="src" name="03_ev_loop_props.phpt"/>
+        <file role="src" name="04_timer_variation.phpt"/>
+        <file role="src" name="05_timer.phpt"/>
+        <file role="src" name="06_keepalive.phpt"/>
+        <file role="src" name="07_stat.phpt"/>
+        <file role="src" name="08_priority.phpt"/>
+        <file role="src" name="08_priority_clamp.phpt"/>
+        <file role="src" name="09_loop_timer.phpt"/>
+        <file role="src" name="10_signal.phpt"/>
+        <file role="src" name="11_watcher_data.phpt"/>
+        <file role="src" name="12_watcher_leak.phpt"/>
+        <file role="src" name="bug24.phpt"/>
+        <file role="src" name="bug33.phpt"/>
+        <file role="src" name="bug43-uncaught-exception.phpt"/>
+        <file role="src" name="bug44-uncaught-exception.phpt"/>
+        <file role="src" name="bug64788.phpt"/>
+        <file role="src" name="13_watcher_data.phpt"/>
+        <file role="src" name="14_get_gc.phpt"/>
+        <file role="src" name="15_periodic.phpt"/>
+        <file role="src" name="16_generator_cb.phpt"/>
+        <file role="src" name="17_exit_in_watcher.phpt"/>
+        <file role="src" name="18_fiber_in_loop_watcher_destroyed.phpt"/>
+        <file role="src" name="19_ev_check_create_stopped.phpt"/>
+        <file role="src" name="20_ev_embed_other_loop_lifetime.phpt"/>
+        <file role="src" name="21_ev_watcher_destroyed_loop.phpt"/>
+        <file role="src" name="22_ev_prepare_fork_class.phpt"/>
       </dir>
       <dir name="libev">
-        <file role="doc" name="LICENSE" />
-        <file role="doc" name="README" />
-        <file role="src" name="ev.c" />
-        <file role="src" name="ev.h" />
-        <file role="src" name="ev_epoll.c" />
-        <file role="src" name="ev_iouring.c" />
-        <file role="src" name="ev_kqueue.c" />
-        <file role="src" name="ev_linuxaio.c" />
-        <file role="src" name="ev_poll.c" />
-        <file role="src" name="ev_port.c" />
-        <file role="src" name="ev_select.c" />
-        <file role="src" name="ev_vars.h" />
-        <file role="src" name="ev_win32.c" />
-        <file role="src" name="ev_wrap.h" />
-        <file role="src" name="libev.m4" />
+        <file role="doc" name="LICENSE"/>
+        <file role="doc" name="README"/>
+        <file role="src" name="ev.c"/>
+        <file role="src" name="ev.h"/>
+        <file role="src" name="ev_epoll.c"/>
+        <file role="src" name="ev_iouring.c"/>
+        <file role="src" name="ev_kqueue.c"/>
+        <file role="src" name="ev_linuxaio.c"/>
+        <file role="src" name="ev_poll.c"/>
+        <file role="src" name="ev_port.c"/>
+        <file role="src" name="ev_select.c"/>
+        <file role="src" name="ev_vars.h"/>
+        <file role="src" name="ev_win32.c"/>
+        <file role="src" name="ev_wrap.h"/>
+        <file role="src" name="libev.m4"/>
       </dir>
     </dir>
   </contents>
@@ -128,10 +136,37 @@
   </dependencies>
   <providesextension>ev</providesextension>
   <extsrcrelease>
-    <configureoption default="no" name="enable-ev-debug" prompt="Enable internal debugging in ev" />
+    <configureoption default="no" name="enable-ev-debug" prompt="Enable internal debugging in ev"/>
   </extsrcrelease>
   <!-- changelog-->
   <changelog>
+    <!--{{{ 1.3.0 -->
+    <release>
+      <version>
+        <release>1.3.0</release>
+        <api>0.4.3</api>
+      </version>
+      <stability>
+        <release>stable</release>
+        <api>stable</api>
+      </stability>
+      <license uri="http://www.php.net/license">PHP</license>
+      <notes>
+          - Fix: EvPrepare and EvFork factories used wrong classes, which led to memory access issues
+          - Fix: watchers read the loop after it was destroyed and reset to NULL
+          - Fix out-of-bounds memory reads due to out-of-range priority
+          - Fix: EvEmbed use-after-free: keep the embedded loop alive
+          - Fix the missing class argument in EvEmbed::set() parameter parsing.
+          - Generate compile_commands.json for IDE
+          - Fix leak in EvEmbed object destructor
+          - Fix segfault in EvCheck::createStopped()
+          - Fix build warnings
+          - Add signal number validation to Ev::feedSignal() and Ev::feedSignalEvent()
+          - Check the upper bound of the valid signal numbers (all methods/functions accepting signal numbers)
+          - Add builds with enabled address sanitizer
+      </notes>
+    </release>
+    <!--}}}-->
     <!--{{{ 1.2.4 -->
     <release>
       <version>
@@ -143,9 +178,9 @@
         <api>stable</api>
       </stability>
       <license uri="http://www.php.net/license">PHP</license>
-      <notes><![CDATA[
-        Fix PHP 8.6 build (by nicolas-grekas @ github.com)
-        ]]></notes>
+      <notes>
+          - Fix PHP 8.6 build (by nicolas-grekas @ github.com)
+      </notes>
     </release>
     <!--}}}-->
     <!-- {{{ 1.2.3 -->

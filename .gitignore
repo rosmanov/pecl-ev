@@ -16,6 +16,8 @@ tags
 /.ccls-cache/
 /compile_commands.json
 
+__pycache__/
+
 *.tgz
 *.in
 *.l[a,o]

@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
+    branches: ["**"]
   pull_request:
+  workflow_call:
 
 jobs:
   test:
@@ -19,12 +21,21 @@ jobs:
           - "8.3.10"
         sanitizer:
           - none
+        variant:
+          - cli
         include:
           - php: "8.5.2" # latest stable version for ASAN builds
             sanitizer: asan
+            variant: cli
+          - php: "8.5"
+            sanitizer: none
+            variant: zts
+          - php: "8.3" # oldest supported version
+            sanitizer: none
+            variant: zts
 
     container:
-      image: php:${{ matrix.php }}-cli
+      image: php:${{ matrix.php }}-${{ matrix.variant }}
 
     steps:
       - uses: actions/checkout@v6
@@ -48,13 +59,24 @@ jobs:
 
           docker-php-source delete
 
+  release-files:
+    name: package.xml, php_ev.h and CHANGELOG.md agree
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check release metadata
+        run: python3 ci/release.py check
+
   ci:
     name: CI
     if: always()
-    needs: test
+    needs: [test, release-files]
     runs-on: ubuntu-latest
 
     steps:
       - name: Check matrix result
         run: |
           test '${{ needs.test.result }}' = 'success'
+          test '${{ needs['release-files'].result }}' = 'success'

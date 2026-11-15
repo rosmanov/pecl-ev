@@ -21,6 +21,8 @@ DESCRIPTION
 ev is a PECL extension providing interface to libev library - high performance
 full-featured event loop written in C.
 
+Refer to `CONTRIBUTING.md` file for the development and release workflow.
+
 ABOUT LIBEV
 -----------
 
