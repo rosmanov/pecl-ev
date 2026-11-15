@@ -95,6 +95,7 @@
         <file role="src" name="19_ev_check_create_stopped.phpt" />
         <file role="src" name="20_ev_embed_other_loop_lifetime.phpt" />
         <file role="src" name="21_ev_watcher_destroyed_loop.phpt" />
+        <file role="src" name="22_ev_prepare_fork_class.phpt" />
       </dir>
       <dir name="libev">
         <file role="doc" name="LICENSE" />
