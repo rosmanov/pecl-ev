@@ -25,4 +25,5 @@ jobs:
             "https://x-token-auth:${BITBUCKET_TOKEN}@bitbucket.org/osmanov/pecl-ev.git"
 
           git push bitbucket --all
-          git push bitbucket --tags
+          # GitHub is the source of truth: a tag that was moved here must be moved on Bitbucket too
+          git push --force bitbucket --tags
