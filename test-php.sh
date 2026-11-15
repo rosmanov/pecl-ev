@@ -11,7 +11,12 @@ for ext in pcntl posix sockets; do
     ext_so_path="$(php-config --extension-dir)/${ext}.so"
     # Skip the extensions compiled into PHP
     if ! php -n -m | grep -qx "$ext" && [ -f "$ext_so_path" ]; then
-        cp "$ext_so_path" "$local_libs_dir"
+        # Parallel test workers run this script concurrently: a plain cp truncates the file
+        # another worker may be loading (segfault), so copy once and rename atomically.
+        if [ ! -f "${local_libs_dir}/${ext}.so" ]; then
+            cp "$ext_so_path" "${local_libs_dir}/${ext}.so.$$"
+            mv -f "${local_libs_dir}/${ext}.so.$$" "${local_libs_dir}/${ext}.so"
+        fi
         ext_options="-dextension=${ext}.so ${ext_options}"
     fi
 done

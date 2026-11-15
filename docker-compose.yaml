@@ -1,10 +1,29 @@
+# Mirrors the test matrix of .github/workflows/ci.yml
 services:
+  php86rctest:
+    stdin_open: true
+    image: ruslanosmanov/pecl-ev-php86rc-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: "8.6-rc"
+  php85test:
+    stdin_open: true
+    image: ruslanosmanov/pecl-ev-php85-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: "8.5.2"
   php8test:
     stdin_open: true
     image: ruslanosmanov/pecl-ev-php8-test
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        PHP_VERSION: "8.3.10"
   php8asantest:
     stdin_open: true
     image: ruslanosmanov/pecl-ev-php8-asan-test
@@ -13,4 +32,22 @@ services:
       dockerfile: Dockerfile
       args:
         SANITIZER: asan
+        PHP_VERSION: "8.5.2"
+  php85ztstest:
+    stdin_open: true
+    image: ruslanosmanov/pecl-ev-php85-zts-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
         PHP_VERSION: "8.5"
+        VARIANT: zts
+  php83ztstest:
+    stdin_open: true
+    image: ruslanosmanov/pecl-ev-php83-zts-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: "8.3"
+        VARIANT: zts
