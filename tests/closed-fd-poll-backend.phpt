@@ -1,5 +1,5 @@
 --TEST--
-A watched descriptor closed under the poll backend stops its watcher with an error instead of aborting
+Release build (-DNDEBUG) must warn when closing a watched fd under the poll backend (libev assertions compiled out)
 --SKIPIF--
 <?php
 if (!(Ev::supportedBackends() & Ev::BACKEND_POLL)) die('skip poll backend unavailable');
