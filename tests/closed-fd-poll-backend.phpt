@@ -2,6 +2,8 @@
 Release build (-DNDEBUG) must warn when closing a watched fd under the poll backend (libev assertions compiled out)
 --SKIPIF--
 <?php
+// Release builds only: with --enable-ev-debug (or a PHP debug build) NDEBUG is not defined, so libev's
+// assert() aborts the process before fd_kill() can feed EV_ERROR to the watcher.
 if (!(Ev::supportedBackends() & Ev::BACKEND_POLL)) die('skip poll backend unavailable');
 ?>
 --FILE--
