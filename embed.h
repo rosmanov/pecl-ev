@@ -21,11 +21,11 @@
 #include "common.h"
 #include "types.h"
 
-/* Define NDEBUG only when neither PHP_EV_DEBUG nor ZEND_DEBUG are enabled.
- * This prevents conflicts with PHP 8.5.2+ which enforces that NDEBUG must
- * not be defined when ZEND_DEBUG is enabled. Now that php.h has been included
- * via common.h, we can safely check ZEND_DEBUG. */
-#if !defined(PHP_EV_DEBUG) && !defined(ZEND_DEBUG)
+/* libev's assertions abort the process, for example when the poll or kqueue backend finds that a watched
+ * descriptor was closed. Like libev's release builds, compile them out unless debugging: the watchers of such a
+ * descriptor are stopped instead, their callbacks receiving Ev::ERROR.
+ * PHP 8.5.2+ refuses NDEBUG in debug builds. php.h, included via common.h, always defines ZEND_DEBUG, as 0 or 1. */
+#if !defined(PHP_EV_DEBUG) && !ZEND_DEBUG && !defined(NDEBUG)
 # define NDEBUG
 #endif
 
